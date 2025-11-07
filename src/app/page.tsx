@@ -108,14 +108,19 @@ export default function DefectForm() {
             </select>
           </div>
 
-          {/* Steps */}
+          {/* Priority */}
           <div>
-            <label className="block font-medium text-gray-700">Steps</label>
-            <textarea
-              {...register("steps")}
+            <label className="block font-medium text-gray-700">Priority</label>
+            <select
+              {...register("priority")}
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
-              placeholder="Describe steps to reproduce"
-            />
+            >
+              <option value="">Select priority</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
           </div>
 
           {/* Expected Result */}
@@ -130,19 +135,14 @@ export default function DefectForm() {
             />
           </div>
 
-          {/* Priority */}
+          {/* Steps */}
           <div>
-            <label className="block font-medium text-gray-700">Priority</label>
-            <select
-              {...register("priority")}
+            <label className="block font-medium text-gray-700">Steps</label>
+            <textarea
+              {...register("steps")}
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
-            >
-              <option value="">Select priority</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Critical">Critical</option>
-            </select>
+              placeholder="Describe steps to reproduce"
+            />
           </div>
 
           {/* Owner */}
@@ -172,8 +172,8 @@ export default function DefectForm() {
           </div>
 
           {/* Defect ID / Link */}
-          <div className="">
-            <label className="font-medium text-gray-7000">
+          <div className="col-span-2">
+            <label className="block font-medium text-gray-700">
               Defect ID / Link
             </label>
             <input
