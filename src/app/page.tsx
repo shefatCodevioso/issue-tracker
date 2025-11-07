@@ -1,4 +1,4 @@
-"use client"; // if you're using App Router (Next.js 13+)
+"use client";
 import { useForm } from "react-hook-form";
 
 type defectForm = {
@@ -13,13 +13,18 @@ type defectForm = {
   defectId: string;
   notes: string;
 };
+
 export default function DefectForm() {
-  const { register, handleSubmit, reset } = useForm<defectForm>();
+  const { register, handleSubmit, reset, getValues } = useForm<defectForm>({
+    defaultValues: {
+      preconditions: "User logged in",
+    },
+  });
 
   const onSubmit = async (data: defectForm) => {
     try {
       const response = await fetch(
-        "http://localhost:5678/webhook-test/9ca20332-a65b-4eb6-8f4b-76ed1e9a731a",
+        "http://localhost:5678/webhook-test/b159d7a4-a197-447d-af7a-02833f5e67eb",
         {
           method: "POST",
           headers: {
@@ -34,21 +39,39 @@ export default function DefectForm() {
       }
 
       const result = await response.json();
-      console.log("✅ Success:", result);
-      reset();
+
+      // Preserve Module, Preconditions, and Steps; reset Defect ID to empty
+      const currentValues = getValues();
+      reset({
+        module: currentValues.module,
+        preconditions: currentValues.preconditions,
+        steps: currentValues.steps,
+        useCase: "",
+        expectedResult: "",
+        priority: "",
+        owner: "Nayon",
+        status: "",
+        defectId: "",
+        notes: "",
+      });
     } catch (error) {
       console.error("Submission error:", error);
       alert("Failed to submit data.");
     }
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Defect Tracking Form
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-2 gap-6"
+        >
+          {/* Module */}
           <div>
             <label className="block font-medium text-gray-700">Module</label>
             <input
@@ -58,6 +81,7 @@ export default function DefectForm() {
             />
           </div>
 
+          {/* Use Case */}
           <div>
             <label className="block font-medium text-gray-700">
               Use Case / Scenario
@@ -69,17 +93,22 @@ export default function DefectForm() {
             />
           </div>
 
+          {/* Preconditions */}
           <div>
             <label className="block font-medium text-gray-700">
               Preconditions
             </label>
-            <textarea
+            <select
               {...register("preconditions")}
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
-              placeholder="List any preconditions"
-            />
+            >
+              <option value="SelectItem">SelectItem</option>
+              <option value="User exists">User exists</option>
+              <option value="User logged in">User logged in</option>
+            </select>
           </div>
 
+          {/* Steps */}
           <div>
             <label className="block font-medium text-gray-700">Steps</label>
             <textarea
@@ -89,6 +118,7 @@ export default function DefectForm() {
             />
           </div>
 
+          {/* Expected Result */}
           <div>
             <label className="block font-medium text-gray-700">
               Expected Result
@@ -100,6 +130,7 @@ export default function DefectForm() {
             />
           </div>
 
+          {/* Priority */}
           <div>
             <label className="block font-medium text-gray-700">Priority</label>
             <select
@@ -114,15 +145,18 @@ export default function DefectForm() {
             </select>
           </div>
 
+          {/* Owner */}
           <div>
             <label className="block font-medium text-gray-700">Owner</label>
             <input
               {...register("owner")}
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
               placeholder="Enter owner name"
+              defaultValue="Nayon"
             />
           </div>
 
+          {/* Status */}
           <div>
             <label className="block font-medium text-gray-700">Status</label>
             <select
@@ -130,15 +164,16 @@ export default function DefectForm() {
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
             >
               <option value="">Select status</option>
-              <option value="New">New</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Closed">Closed</option>
+              <option value="Pass">Pass</option>
+              <option value="Failed">Failed</option>
+              <option value="NotRun">NotRun</option>
+              <option value="Blocked">Blocked</option>
             </select>
           </div>
 
-          <div>
-            <label className="block font-medium text-gray-700">
+          {/* Defect ID / Link */}
+          <div className="">
+            <label className="font-medium text-gray-7000">
               Defect ID / Link
             </label>
             <input
@@ -148,7 +183,8 @@ export default function DefectForm() {
             />
           </div>
 
-          <div>
+          {/* Notes */}
+          <div className="col-span-2">
             <label className="block font-medium text-gray-700">Notes</label>
             <textarea
               {...register("notes")}
@@ -157,14 +193,25 @@ export default function DefectForm() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Submit
-          </button>
+          {/* Submit Button */}
+          <div className="col-span-2">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 }
+
+/*
+1. Make form 2 column
+2. don't clear Module field after submit.
+3. precondition field should be in select. SelectItem, User exists, User logged in(make it default) and don't clear after submit
+4. Don't reset steps field after submit.
+5. Delete Defect ID / Link. (make it empty)
+*/
