@@ -49,7 +49,7 @@ export default function DefectForm() {
         useCase: "",
         expectedResult: "",
         priority: "",
-        owner: "Nayon",
+        owner: "Hasib",
         status: "",
         defectId: "",
         notes: "",
@@ -60,12 +60,37 @@ export default function DefectForm() {
     }
   };
 
+  const handleReset = () => {
+      const currentValues = getValues();
+    reset({
+      module: currentValues.module,
+      preconditions: currentValues.preconditions,
+      steps: currentValues.steps,
+      useCase: "",
+      status: "",
+      notes: "",
+      expectedResult: "",
+      priority: currentValues.priority,
+      owner: "Hasib",
+      defectId: currentValues.defectId,
+    });
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Defect Tracking Form
-        </h1>
+        <div className="flex items-center mb-6 gap-6">
+          <h1 className="text-2xl font-bold text-center  text-gray-800">
+            Defect Tracking Form
+          </h1>
+          <button
+            onClick={handleReset}
+            className="px-6 bg-red-600 text-white font-semibold py-2 rounded-md hover:bg-red-700 transition cursor-pointer"
+          >
+            {" "}
+            Rest{" "}
+          </button>
+        </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -152,7 +177,7 @@ export default function DefectForm() {
               {...register("owner")}
               className="w-full mt-1 border border-gray-300 rounded-md p-2"
               placeholder="Enter owner name"
-              defaultValue="Nayon"
+              defaultValue="Hasib"
             />
           </div>
 
@@ -165,7 +190,7 @@ export default function DefectForm() {
             >
               <option value="">Select status</option>
               <option value="Pass">Pass</option>
-              <option value="Failed">Failed</option>
+              <option value="Failed">Fail</option>
               <option value="NotRun">NotRun</option>
               <option value="Blocked">Blocked</option>
             </select>
