@@ -59,7 +59,6 @@ export default function DefectForm() {
       alert("Failed to submit data.");
     }
   };
-
   const handleReset = () => {
       const currentValues = getValues();
     reset({
@@ -75,6 +74,7 @@ export default function DefectForm() {
       defectId: currentValues.defectId,
     });
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
